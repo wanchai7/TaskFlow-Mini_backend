@@ -16,7 +16,8 @@ const createTask = async (req, res) => {
     });
 
     const savedTask = await newTask.save();
-    res.status(201).json(savedTask);
+    const populatedTask = await savedTask.populate("userId", "fullName profilePic");
+    res.status(201).json(populatedTask);
   } catch (error) {
     console.error("Error creating task:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -25,7 +26,7 @@ const createTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    const tasks = await Task.find().populate("userId", "fullName profilePic").sort({ createdAt: -1 });
     res.status(200).json(tasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
