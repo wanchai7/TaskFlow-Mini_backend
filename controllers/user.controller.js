@@ -37,7 +37,7 @@ const register = async (req, res) => {
       res.cookie("jwt", token, {
         maxAge: 24 * 60 * 60 * 1000, //MS
         httpOnly: true, //XSS Attacks
-        sameSite: "strict", //CSRF attacks,
+        sameSite: node_mode === "production" ? "none" : "strict", //CSRF attacks, cross-site support
         secure: node_mode === "production",
       });
 
@@ -88,7 +88,7 @@ const login = async (req, res) => {
     res.cookie("jwt", token, {
       maxAge: 24 * 60 * 60 * 1000, //MS
       httpOnly: true, //XSS Attacks
-      sameSite: "strict", //CSRF attacks,
+      sameSite: node_mode === "production" ? "none" : "strict", //CSRF attacks, cross-site support
       secure: node_mode === "production",
     });
 
@@ -111,7 +111,12 @@ const login = async (req, res) => {
 
 const logOut = async (req, res) => {
   try {
-    res.cookie("jwt", "", { maxAge: 0 });
+    res.cookie("jwt", "", { 
+      maxAge: 0,
+      httpOnly: true,
+      sameSite: node_mode === "production" ? "none" : "strict",
+      secure: node_mode === "production"
+    });
     res.send({ message: "Logged Out successfully" });
   } catch (error) {
     res
