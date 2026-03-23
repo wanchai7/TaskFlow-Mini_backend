@@ -4,6 +4,9 @@ const { Schema, model } = mongoose;
 const TaskSchema = new Schema(
   {
     title: { type: String, required: true },
+    description: { type: String },
+    startDate: { type: Date, default: Date.now },
+    deadline: { type: Date },
     status: { 
       type: String, 
       enum: ["pending", "in-progress", "completed"], 

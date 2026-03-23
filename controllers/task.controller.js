@@ -1,7 +1,7 @@
 const Task = require("../models/task.model");
 
 const createTask = async (req, res) => {
-  const { title, status, priority } = req.body;
+  const { title, status, priority, description, startDate, deadline } = req.body;
 
   if (!title) {
     return res.status(400).json({ message: "Title is required" });
@@ -10,6 +10,9 @@ const createTask = async (req, res) => {
   try {
     const newTask = new Task({
       title,
+      description,
+      startDate: startDate || new Date(),
+      deadline,
       status: status || "pending",
       priority: priority || "medium",
       userId: req.user._id,
@@ -36,7 +39,7 @@ const getTasks = async (req, res) => {
 
 const updateTask = async (req, res) => {
   const { id } = req.params;
-  const { title, status, priority } = req.body;
+  const { title, status, priority, description, startDate, deadline } = req.body;
 
   try {
     const task = await Task.findOne({ _id: id, userId: req.user._id });
@@ -46,6 +49,9 @@ const updateTask = async (req, res) => {
     }
 
     if (title) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (startDate) task.startDate = startDate;
+    if (deadline) task.deadline = deadline;
     if (status) task.status = status;
     if (priority) task.priority = priority;
 
