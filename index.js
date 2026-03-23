@@ -13,7 +13,7 @@ const BASE_URL = process.env.BASE_URL;
 const MONGODB = process.env.MONGODB;
 
 app.get("/", (req, res) => {
-  res.send("Welcome to MERN CHAT SERVER 110");
+  res.send("Welcome to TaskFlow-Mini");
 });
 app.use(
   cors({
